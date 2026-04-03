@@ -205,14 +205,17 @@ export const demoProjects = [
   {
     title: 'Gym Website Demo',
     summary: 'Membership plans, trainer schedules, and high-energy brand visuals.',
+    previewUrl: 'https://your-gym-demo.vercel.app',
   },
   {
     title: 'Local Business Demo',
     summary: 'Service showcase, testimonials, maps integration, and inquiry conversion flow.',
+    previewUrl: 'https://your-local-business-demo.vercel.app',
   },
   {
     title: 'Ecommerce Demo',
     summary: 'Category-first shopping experience with product highlights and fast checkout journey.',
+    previewUrl: 'https://your-ecommerce-demo.vercel.app',
   },
 ]
 

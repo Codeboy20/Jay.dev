@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowRight, Check, ChevronLeft, LoaderCircle, MessageCircleMore } from 'lucide-react'
+import { ArrowRight, Check, ChevronLeft, ExternalLink, LoaderCircle, MessageCircleMore } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import MagneticButton from '../components/MagneticButton'
@@ -183,7 +183,15 @@ export default function ServicesPage() {
               >
                 <h3 className="font-display text-xl font-semibold text-white">{demo.title}</h3>
                 <p className="mt-3 text-sm text-slate-300">{demo.summary}</p>
-                <p className="mt-5 text-sm font-medium text-brand-blue">Interactive Preview</p>
+                <a
+                  href={demo.previewUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-brand-blue transition hover:text-white"
+                >
+                  Interactive Preview
+                  <ExternalLink className="h-4 w-4" />
+                </a>
               </motion.article>
             ))}
           </div>
