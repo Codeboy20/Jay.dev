@@ -299,7 +299,7 @@ export default function PortfolioPage() {
               <img src="/contact-logos/gmail.svg" alt="Gmail logo" className="h-4 w-4 object-contain" />
               Email
             </a>
-            <a className="contact-pill" href="https://wa.me/919999999999" target="_blank" rel="noreferrer">
+            <a className="contact-pill" href="https://wa.me/919877576476" target="_blank" rel="noreferrer">
               <img src="/contact-logos/whatsapp.svg" alt="WhatsApp logo" className="h-4 w-4 object-contain" />
               WhatsApp
             </a>
