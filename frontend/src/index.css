@@ -134,3 +134,32 @@ body {
   overflow: hidden;
 }
 
+.loader-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-position: center;
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 34%, rgba(0, 0, 0, 0.14) 76%, transparent 100%);
+}
+
+.loader-orbit {
+  animation: orbitSpin 9s linear infinite;
+}
+
+.loader-orb {
+  position: absolute;
+  border-radius: 9999px;
+  box-shadow: 0 0 24px currentColor;
+}
+
+@keyframes orbitSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+

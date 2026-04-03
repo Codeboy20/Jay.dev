@@ -36,5 +36,13 @@ export default defineConfig([
       'react/no-unknown-property': 'off',
     },
   },
+  {
+    files: ['api/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
 ])
 

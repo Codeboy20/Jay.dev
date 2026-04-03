@@ -9,7 +9,7 @@ import HeroBackdropElements from '../components/HeroBackdropElements'
 import TiltCard from '../components/TiltCard'
 import { demoProjects, pricingPlans, processSteps, servicesList, serviceTestimonials } from '../data/content'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? 'http://localhost:5000' : '')
 
 const initialForm = {
   name: '',
@@ -17,6 +17,7 @@ const initialForm = {
   businessType: '',
   payment: '',
   message: '',
+  website: '',
 }
 
 export default function ServicesPage() {
@@ -64,7 +65,7 @@ export default function ServicesPage() {
         body: JSON.stringify(formData),
       })
 
-      const data = await response.json()
+      const data = await response.json().catch(() => ({}))
 
       if (!response.ok || !data.success) {
         throw new Error(data.message || 'Unable to send message right now.')
@@ -213,42 +214,42 @@ export default function ServicesPage() {
         <div id="pricing-section">
           <SectionReveal>
             <p className="section-kicker">Pricing</p>
-          <h2 className="section-title">Flexible plans for every growth stage</h2>
-          <div className="mt-8 grid gap-5 lg:grid-cols-3">
-            {pricingPlans.map((plan, index) => (
-              <motion.article
-                key={plan.tier}
-                className={`glass-panel rounded-3xl p-6 ${plan.featured ? 'ring-2 ring-brand-blue/50' : ''}`}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={{ duration: 0.62, delay: index * 0.1 }}
-                whileHover={{ y: -8 }}
-              >
-                <p className="text-xs uppercase tracking-[0.16em] text-brand-blue">{plan.tier}</p>
-                <h3 className="mt-3 font-display text-3xl font-semibold text-white whitespace-nowrap">{plan.price}</h3>
-                <ul className="mt-5 space-y-3 text-sm text-slate-300">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
-                      <Check className="mt-0.5 h-4 w-4 text-brand-neon" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <MagneticButton
-                  type="button"
-                  onClick={() => handleSelectPlan(plan)}
-                  className={`mt-6 inline-flex items-center justify-center rounded-xl border px-5 py-2.5 text-sm font-semibold transition ${
-                    selectedPlan === plan.tier
-                      ? 'border-brand-neon/80 bg-brand-neon/25 text-white'
-                      : 'border-white/20 bg-white/10 text-slate-100'
-                  }`}
+            <h2 className="section-title">Flexible plans for every growth stage</h2>
+            <div className="mt-8 grid gap-5 lg:grid-cols-3">
+              {pricingPlans.map((plan, index) => (
+                <motion.article
+                  key={plan.tier}
+                  className={`glass-panel rounded-3xl p-6 ${plan.featured ? 'ring-2 ring-brand-blue/50' : ''}`}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.35 }}
+                  transition={{ duration: 0.62, delay: index * 0.1 }}
+                  whileHover={{ y: -8 }}
                 >
-                  {selectedPlan === plan.tier ? 'Selected' : 'Select'}
-                </MagneticButton>
-              </motion.article>
-            ))}
-          </div>
+                  <p className="text-xs uppercase tracking-[0.16em] text-brand-blue">{plan.tier}</p>
+                  <h3 className="mt-3 whitespace-nowrap font-display text-3xl font-semibold text-white">{plan.price}</h3>
+                  <ul className="mt-5 space-y-3 text-sm text-slate-300">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-3">
+                        <Check className="mt-0.5 h-4 w-4 text-brand-neon" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <MagneticButton
+                    type="button"
+                    onClick={() => handleSelectPlan(plan)}
+                    className={`mt-6 inline-flex items-center justify-center rounded-xl border px-5 py-2.5 text-sm font-semibold transition ${
+                      selectedPlan === plan.tier
+                        ? 'border-brand-neon/80 bg-brand-neon/25 text-white'
+                        : 'border-white/20 bg-white/10 text-slate-100'
+                    }`}
+                  >
+                    {selectedPlan === plan.tier ? 'Selected' : 'Select'}
+                  </MagneticButton>
+                </motion.article>
+              ))}
+            </div>
             {planNotice ? <p className="mt-5 text-sm text-brand-neon">{planNotice}</p> : null}
           </SectionReveal>
         </div>
@@ -393,88 +394,79 @@ export default function ServicesPage() {
             <p className="section-kicker">Contact</p>
             <h2 className="section-title">Start your website project</h2>
             <form className="mt-7 grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
-            <input className="input-style" type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
-            <input
-              className="input-style"
-              type="email"
-              name="email"
-              placeholder="Business Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <input
-              className="input-style md:col-span-2"
-              type="text"
-              name="businessType"
-              placeholder="Business Type"
-              value={formData.businessType}
-              onChange={handleChange}
-              required
-            />
-            <input
-              className="input-style md:col-span-2"
-              type="text"
-              name="payment"
-              placeholder="Payment"
-              value={formData.payment}
-              onChange={handleChange}
-              required
-            />
-            <textarea
-              className="input-style md:col-span-2"
-              rows="4"
-              name="message"
-              placeholder="Tell me about your project goals"
-              value={formData.message}
-              onChange={handleChange}
-              required
-            />
+              <input className="input-style" type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
+              <input
+                className="input-style"
+                type="email"
+                name="email"
+                placeholder="Business Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+              <input
+                className="input-style md:col-span-2"
+                type="text"
+                name="businessType"
+                placeholder="Business Type"
+                value={formData.businessType}
+                onChange={handleChange}
+                required
+              />
+              <input
+                className="input-style md:col-span-2"
+                type="text"
+                name="payment"
+                placeholder="Budget / Payment Range (optional)"
+                value={formData.payment}
+                onChange={handleChange}
+              />
+              <textarea
+                className="input-style md:col-span-2"
+                rows="4"
+                name="message"
+                placeholder="Tell me about your project goals"
+                value={formData.message}
+                onChange={handleChange}
+                required
+              />
+              <input
+                className="pointer-events-none absolute left-[-9999px] opacity-0"
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={formData.website}
+                onChange={handleChange}
+              />
 
-            <MagneticButton
-              type="submit"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-blue/50 bg-brand-blue/20 px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
-              disabled={sending}
-            >
-              {sending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-              {sending ? 'Sending...' : 'Send Inquiry'}
-            </MagneticButton>
+              <MagneticButton
+                type="submit"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-blue/50 bg-brand-blue/20 px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                disabled={sending}
+              >
+                {sending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
+                {sending ? 'Sending...' : 'Send Inquiry'}
+              </MagneticButton>
 
-            <a
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-neon/60 bg-brand-neon/20 px-5 py-3 text-sm font-semibold text-white"
-              href="https://wa.me/919999999999"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <MessageCircleMore className="h-4 w-4" />
-              WhatsApp
-            </a>
+              <a
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-neon/60 bg-brand-neon/20 px-5 py-3 text-sm font-semibold text-white"
+                href="https://wa.me/919999999999"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <MessageCircleMore className="h-4 w-4" />
+                WhatsApp
+              </a>
 
-            {result.text ? (
-              <p className={`md:col-span-2 text-sm ${result.type === 'success' ? 'text-brand-neon' : 'text-rose-300'}`}>{result.text}</p>
-            ) : null}
-          </form>
+              {result.text ? (
+                <p className={`md:col-span-2 text-sm ${result.type === 'success' ? 'text-brand-neon' : 'text-rose-300'}`}>{result.text}</p>
+              ) : null}
+            </form>
           </SectionReveal>
         </div>
       </section>
     </main>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
