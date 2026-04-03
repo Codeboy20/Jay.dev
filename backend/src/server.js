@@ -100,13 +100,13 @@ async function sendContactMail(payload) {
     from: `${fromName} <${process.env.SMTP_USER}>`,
     to: process.env.CONTACT_TO,
     replyTo: payload.email,
-    subject: `New portfolio inquiry from ${payload.name}`,
+    subject: `New Business inquiry from ${payload.name}`,
     text: `Name: ${payload.name}\nEmail: ${payload.email}\nBusiness Type: ${payload.businessType}\n\nMessage:\n${payload.message}`,
     html: `
-      <h2>New Portfolio Inquiry</h2>
+      <h2>New Business Inquiry</h2>
       <p><strong>Name:</strong> ${payload.name}</p>
       <p><strong>Email:</strong> ${payload.email}</p>
-      <p><strong>Business Type:</strong> ${payload.businessType}</p>
+      <p><strong>Plan Selected:</strong> ${payload.businessType}</p>
       <p><strong>Message:</strong></p>
       <p>${payload.message.replace(/\n/g, '<br/>')}</p>
     `,
