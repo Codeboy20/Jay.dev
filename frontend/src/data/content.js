@@ -82,25 +82,28 @@ export const portfolioTechnologies = [
 ]
 export const portfolioProjects = [
   {
-    title: 'Nova Commerce',
+    title: 'Smart InvoiceGen',
     description:
-      'A conversion-focused ecommerce platform with advanced filtering, animation-powered storytelling, and analytics dashboards.',
-    tags: ['React', 'Node', 'MongoDB', 'Stripe'],
-    link: '#',
+      'A modern GST billing platform for Indian businesses that helps teams create, send, and manage professional invoices online or offline, with seamless Google Drive integration and real-time payment tracking.',
+    tags: ['React', 'Vite', 'Supabase', 'Node.js', 'Google Drive API', 'Electron'],
+    previewUrl: 'https://bill-yourneed.vercel.app/',
+    githubUrl: 'https://github.com/Codeboy20/InvoiceGen',
   },
   {
     title: 'Pulse Fitness Platform',
     description:
       'A gym management and booking platform with personalized dashboards, payment flows, and intelligent lead capture.',
     tags: ['MERN', 'Framer Motion', 'JWT'],
-    link: '#',
+    previewUrl: 'https://your-pulse-fitness.vercel.app',
+    githubUrl: 'https://github.com/your-username/pulse-fitness-platform',
   },
   {
     title: 'Orbit SaaS Landing Suite',
     description:
       'A premium landing page ecosystem with A/B-ready sections, dynamic CMS blocks, and high-performance delivery.',
     tags: ['React', 'Tailwind', 'Vite'],
-    link: '#',
+    previewUrl: 'https://your-orbit-saas.vercel.app',
+    githubUrl: 'https://github.com/your-username/orbit-saas-landing-suite',
   },
 ]
 

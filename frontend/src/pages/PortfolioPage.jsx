@@ -211,10 +211,26 @@ export default function PortfolioPage() {
                     </span>
                   ))}
                 </div>
-                <a href={project.link} className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-brand-blue hover:text-white">
-                  Live Preview
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a
+                    href={project.previewUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-brand-blue/40 bg-brand-blue/10 px-4 py-2 text-sm font-medium text-brand-blue transition hover:border-brand-blue hover:bg-brand-blue/20 hover:text-white"
+                  >
+                    Show Preview
+                    <ArrowUpRight className="h-4 w-4" />
+                  </a>
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-slate-100 transition hover:border-white/40 hover:bg-white/10 hover:text-white"
+                  >
+                    <img src="/contact-logos/github.svg" alt="GitHub logo" className="h-4 w-4 object-contain" />
+                    View GitHub
+                  </a>
+                </div>
               </motion.article>
             ))}
           </div>
