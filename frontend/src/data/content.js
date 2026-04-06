@@ -90,12 +90,12 @@ export const portfolioProjects = [
     githubUrl: 'https://github.com/Codeboy20/InvoiceGen',
   },
   {
-    title: 'Pulse Fitness Platform',
+    title: 'Xpens Analytics',
     description:
-      'A gym management and booking platform with personalized dashboards, payment flows, and intelligent lead capture.',
-    tags: ['MERN', 'Framer Motion', 'JWT'],
-    previewUrl: 'https://your-pulse-fitness.vercel.app',
-    githubUrl: 'https://github.com/your-username/pulse-fitness-platform',
+      'A modern personal finance dashboard that helps users track income and expenses, analyze spending with clean visual reports, and export polished PDF summaries through a simple, session-based experience.',
+    tags: ['React', 'Material UI', 'Chart.js', 'JavaScript', 'Responsive Web Design', 'PDF Report Generation'],
+    previewUrl: 'https://xpens-analytics-dpjg.vercel.app/',
+    githubUrl: 'https://github.com/Codeboy20/Xpens-Analytics',
   },
   {
     title: 'Orbit SaaS Landing Suite',
