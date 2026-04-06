@@ -191,7 +191,7 @@ export default function PortfolioPage() {
           <SectionReveal>
           <p className="section-kicker">Projects</p>
           <h2 className="section-title">Recent digital products and premium website builds</h2>
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-2 2xl:grid-cols-4">
             {portfolioProjects.map((project, index) => (
               <motion.article
                 key={project.title}

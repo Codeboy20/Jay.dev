@@ -10,6 +10,7 @@ import certIBM from '../assets/images/ibm.jpg'
 import invoiceGenPreview from '../assets/images/invoicegen.png'
 import xpensPreview from '../assets/images/Xpens.png'
 import quizifyPreview from '../assets/images/quizify.png'
+import revynAIPreview from '../assets/images/revynAI.png'
 
 export const portfolioSkills = [
   {
@@ -110,6 +111,15 @@ export const portfolioProjects = [
     image: quizifyPreview,
     previewUrl: 'https://quizify-bay.vercel.app/',
     githubUrl: 'https://github.com/Codeboy20/quizify',
+  },
+  {
+    title: 'RevynAI',
+    description:
+      'A smart code review web app that analyzes pasted code snippets, detects syntax and logic issues, scores code quality, highlights strengths and weaknesses, suggests improvements, and generates best-effort corrected code through an interactive editor-based review experience.',
+    tags: ['React', 'JavaScript', 'Monaco Editor', 'Code Review System', 'Static Analysis', 'Responsive Web Design', 'Markdown Rendering'],
+    image: revynAIPreview,
+    previewUrl: 'https://revyn-ai-sec.vercel.app/',
+    githubUrl: 'https://github.com/Codeboy20/RevynAI',
   },
 ]
 
