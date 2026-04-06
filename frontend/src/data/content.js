@@ -98,12 +98,12 @@ export const portfolioProjects = [
     githubUrl: 'https://github.com/Codeboy20/Xpens-Analytics',
   },
   {
-    title: 'Orbit SaaS Landing Suite',
+    title: 'Quizify',
     description:
-      'A premium landing page ecosystem with A/B-ready sections, dynamic CMS blocks, and high-performance delivery.',
-    tags: ['React', 'Tailwind', 'Vite'],
-    previewUrl: 'https://your-orbit-saas.vercel.app',
-    githubUrl: 'https://github.com/your-username/orbit-saas-landing-suite',
+      'An interactive tech quiz platform with Google OAuth login, category-based quizzes, custom quiz creation, animated responsive UI, and downloadable PDF score reports.',
+    tags: ['React', 'Tailwind CSS', 'Auth0', 'JavaScript', 'Responsive Web Design', 'PDF Report Generation'],
+    previewUrl: 'https://quizify-bay.vercel.app/',
+    githubUrl: 'https://github.com/Codeboy20/quizify',
   },
 ]
 
