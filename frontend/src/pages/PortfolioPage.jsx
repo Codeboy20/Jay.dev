@@ -202,6 +202,16 @@ export default function PortfolioPage() {
                 transition={{ duration: 0.6, delay: index * 0.12 }}
                 whileHover={{ y: -8 }}
               >
+                <div className="mb-5 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/40 p-3">
+                  <div className="flex aspect-[16/9] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_52%),linear-gradient(180deg,rgba(15,23,42,0.96),rgba(2,6,23,0.88))] p-2">
+                    <img
+                      src={project.image}
+                      alt={`${project.title} preview`}
+                      loading="lazy"
+                      className="h-full w-full rounded-lg object-contain object-center shadow-[0_18px_45px_rgba(15,23,42,0.35)]"
+                    />
+                  </div>
+                </div>
                 <h3 className="font-display text-xl font-semibold text-white">{project.title}</h3>
                 <p className="mt-3 text-sm text-slate-300">{project.description}</p>
                 <div className="mt-5 flex flex-wrap gap-2">

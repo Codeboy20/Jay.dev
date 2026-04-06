@@ -7,6 +7,9 @@ import certAZ104 from '../assets/images/az 104.png'
 import certDP900 from '../assets/images/dp 900.png'
 import certSC900 from '../assets/images/sc 900.png'
 import certIBM from '../assets/images/ibm.jpg'
+import invoiceGenPreview from '../assets/images/invoicegen.png'
+import xpensPreview from '../assets/images/Xpens.png'
+import quizifyPreview from '../assets/images/quizify.png'
 
 export const portfolioSkills = [
   {
@@ -86,6 +89,7 @@ export const portfolioProjects = [
     description:
       'A modern GST billing platform for Indian businesses that helps teams create, send, and manage professional invoices online or offline, with seamless Google Drive integration and real-time payment tracking.',
     tags: ['React', 'Vite', 'Supabase', 'Node.js', 'Google Drive API', 'Electron'],
+    image: invoiceGenPreview,
     previewUrl: 'https://bill-yourneed.vercel.app/',
     githubUrl: 'https://github.com/Codeboy20/InvoiceGen',
   },
@@ -94,6 +98,7 @@ export const portfolioProjects = [
     description:
       'A modern personal finance dashboard that helps users track income and expenses, analyze spending with clean visual reports, and export polished PDF summaries through a simple, session-based experience.',
     tags: ['React', 'Material UI', 'Chart.js', 'JavaScript', 'Responsive Web Design', 'PDF Report Generation'],
+    image: xpensPreview,
     previewUrl: 'https://xpens-analytics-dpjg.vercel.app/',
     githubUrl: 'https://github.com/Codeboy20/Xpens-Analytics',
   },
@@ -102,6 +107,7 @@ export const portfolioProjects = [
     description:
       'An interactive tech quiz platform with Google OAuth login, category-based quizzes, custom quiz creation, animated responsive UI, and downloadable PDF score reports.',
     tags: ['React', 'Tailwind CSS', 'Auth0', 'JavaScript', 'Responsive Web Design', 'PDF Report Generation'],
+    image: quizifyPreview,
     previewUrl: 'https://quizify-bay.vercel.app/',
     githubUrl: 'https://github.com/Codeboy20/quizify',
   },
