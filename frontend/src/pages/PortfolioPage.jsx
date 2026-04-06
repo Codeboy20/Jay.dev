@@ -195,7 +195,7 @@ export default function PortfolioPage() {
             {portfolioProjects.map((project, index) => (
               <motion.article
                 key={project.title}
-                className="glass-panel group rounded-3xl p-6"
+                className="glass-panel group flex h-full flex-col rounded-3xl p-6"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.35 }}
@@ -211,7 +211,7 @@ export default function PortfolioPage() {
                     </span>
                   ))}
                 </div>
-                <div className="mt-6 flex flex-wrap gap-3">
+                <div className="mt-auto flex flex-wrap gap-3 pt-6">
                   <a
                     href={project.previewUrl}
                     target="_blank"
