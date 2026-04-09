@@ -234,6 +234,7 @@ export const demoProjects = [
     title: 'SweetShop.com',
     summary: 'Service showcase, maps integration, and inquiry conversion flow.',
     image: sweetshoppreview,
+    previewLabel: 'View Live Demo',
     previewUrl: 'https://sweet-shop-two-lyart.vercel.app/',
   },
   {
