@@ -174,22 +174,34 @@ export default function ServicesPage() {
             {demoProjects.map((demo, index) => (
               <motion.article
                 key={demo.title}
-                className="glass-panel group rounded-3xl p-6"
+                className="glass-panel group flex h-full flex-col rounded-3xl p-6"
                 whileHover={{ y: -8, scale: 1.01 }}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.35 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
+                {demo.image ? (
+                  <div className="mb-5 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/40 p-3">
+                    <div className="flex aspect-[16/9] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_52%),linear-gradient(180deg,rgba(15,23,42,0.96),rgba(2,6,23,0.88))] p-2">
+                      <img
+                        src={demo.image}
+                        alt={`${demo.title} preview`}
+                        loading="lazy"
+                        className="h-full w-full rounded-lg object-cover object-top shadow-[0_18px_45px_rgba(15,23,42,0.35)]"
+                      />
+                    </div>
+                  </div>
+                ) : null}
                 <h3 className="font-display text-xl font-semibold text-white">{demo.title}</h3>
                 <p className="mt-3 text-sm text-slate-300">{demo.summary}</p>
                 <a
                   href={demo.previewUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-brand-blue transition hover:text-white"
+                  className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-medium text-brand-blue transition hover:text-white"
                 >
-                  Interactive Preview
+                  {demo.previewLabel || 'Interactive Preview'}
                   <ExternalLink className="h-4 w-4" />
                 </a>
               </motion.article>

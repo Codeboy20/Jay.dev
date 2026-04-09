@@ -11,6 +11,7 @@ import invoiceGenPreview from '../assets/images/invoicegen.png'
 import xpensPreview from '../assets/images/Xpens.png'
 import quizifyPreview from '../assets/images/quizify.png'
 import revynAIPreview from '../assets/images/revynAI.png'
+import gymDemoPreview from '../assets/images/demo-gym.png'
 
 export const portfolioSkills = [
   {
@@ -222,9 +223,11 @@ export const servicesList = [
 
 export const demoProjects = [
   {
-    title: 'Gym Website Demo',
-    summary: 'Membership plans, trainer schedules, and high-energy brand visuals.',
-    previewUrl: 'https://your-gym-demo.vercel.app',
+    title: 'AstrafitClub',
+    summary: 'Gym website demo with membership plans, trainer profiles, and high-energy brand visuals.',
+    image: gymDemoPreview,
+    previewLabel: 'AstrafitClub',
+    previewUrl: 'https://astrafit-club.vercel.app',
   },
   {
     title: 'Local Business Demo',
