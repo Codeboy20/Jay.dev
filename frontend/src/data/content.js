@@ -12,6 +12,7 @@ import xpensPreview from '../assets/images/Xpens.png'
 import quizifyPreview from '../assets/images/quizify.png'
 import revynAIPreview from '../assets/images/revynAI.png'
 import gymDemoPreview from '../assets/images/demo-gym.png'
+import sweetshoppreview from '../assets/images/sweetshop.com.png'
 
 export const portfolioSkills = [
   {
@@ -230,9 +231,10 @@ export const demoProjects = [
     previewUrl: 'https://astrafit-club.vercel.app',
   },
   {
-    title: 'Local Business Demo',
-    summary: 'Service showcase, testimonials, maps integration, and inquiry conversion flow.',
-    previewUrl: 'https://your-local-business-demo.vercel.app',
+    title: 'SweetShop.com',
+    summary: 'Service showcase, maps integration, and inquiry conversion flow.',
+    image: sweetshoppreview,
+    previewUrl: 'https://sweet-shop-two-lyart.vercel.app/',
   },
   {
     title: 'Ecommerce Demo',
