@@ -266,7 +266,7 @@ export const serviceTestimonials = [
 export const pricingPlans = [
   {
     tier: 'Basic Plan',
-    price: 'INR 4,999 - INR 9,999',
+    price: 'INR 4,999 Only',
     features: [
       'Up to 5 pages',
       'Responsive design',
@@ -278,7 +278,7 @@ export const pricingPlans = [
   },
   {
     tier: 'Standard Plan',
-    price: 'INR 10,999 - INR 24,999',
+    price: 'INR 9,999 Only',
     features: [
       'Up to 12 pages',
       'Custom animations',
@@ -292,7 +292,7 @@ export const pricingPlans = [
   },
   {
     tier: 'Premium Plan',
-    price: 'INR 29,999 - INR 49,999',
+    price: 'INR 19,999 Only',
     features: [
       'Custom web app feel',
       'Advanced interactions',
