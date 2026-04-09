@@ -226,7 +226,7 @@ export const demoProjects = [
     title: 'AstrafitClub',
     summary: 'Gym website demo with membership plans, trainer profiles, and high-energy brand visuals.',
     image: gymDemoPreview,
-    previewLabel: 'AstrafitClub',
+    previewLabel: 'View Live Demo',
     previewUrl: 'https://astrafit-club.vercel.app',
   },
   {
