@@ -13,6 +13,7 @@ import quizifyPreview from '../assets/images/quizify.png'
 import revynAIPreview from '../assets/images/revynAI.png'
 import gymDemoPreview from '../assets/images/demo-gym.png'
 import sweetshoppreview from '../assets/images/sweetshop.com.png'
+import rawclawPreview from '../assets/images/rawclaw.png'
 
 export const portfolioSkills = [
   {
@@ -240,7 +241,9 @@ export const demoProjects = [
   {
     title: 'Ecommerce Demo',
     summary: 'Category-first shopping experience with product highlights and fast checkout journey.',
-    previewUrl: 'https://your-ecommerce-demo.vercel.app',
+    image: rawclawPreview,
+    previewLabel: 'View Live Preview',
+    previewUrl: 'https://rawclaw.vercel.app/',
   },
 ]
 
