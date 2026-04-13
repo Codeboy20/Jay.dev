@@ -239,7 +239,7 @@ export const demoProjects = [
     previewUrl: 'https://sweet-shop-two-lyart.vercel.app/',
   },
   {
-    title: 'Ecommerce Demo',
+    title: 'RawClaw Fashion',
     summary: 'Category-first shopping experience with product highlights and fast checkout journey.',
     image: rawclawPreview,
     previewLabel: 'View Live Preview',
