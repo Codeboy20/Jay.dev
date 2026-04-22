@@ -23,10 +23,18 @@ export function useLenis() {
 
     frame = requestAnimationFrame(raf)
 
+    const stopLenis = () => lenis.stop()
+    const startLenis = () => lenis.start()
+
+    window.addEventListener('lenis-stop', stopLenis)
+    window.addEventListener('lenis-start', startLenis)
+
     return () => {
       if (frame) {
         cancelAnimationFrame(frame)
       }
+      window.removeEventListener('lenis-stop', stopLenis)
+      window.removeEventListener('lenis-start', startLenis)
       lenis.destroy()
     }
   }, [])

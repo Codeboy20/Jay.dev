@@ -1,5 +1,6 @@
-﻿import { motion, useScroll, useTransform } from 'framer-motion'
-import { ArrowUpRight, ChevronDown, ChevronLeft } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
+import { ArrowUpRight, ChevronDown, ChevronLeft, Minus, Plus, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import HeroBackdropElements from '../components/HeroBackdropElements'
 import portfolioHeroImage from '../assets/images/image2.png'
@@ -7,14 +8,144 @@ import MagneticButton from '../components/MagneticButton'
 import SectionReveal from '../components/SectionReveal'
 import LazyThreeBackground from '../components/LazyThreeBackground'
 import TiltCard from '../components/TiltCard'
-import { portfolioCertifications, portfolioProjects, portfolioSkills, portfolioTechnologies, portfolioTimeline } from '../data/content'
+import {
+  portfolioCertifications,
+  portfolioDesigns,
+  portfolioProjects,
+  portfolioSkills,
+  portfolioTechnologies,
+  portfolioTimeline,
+} from '../data/content'
 
 const RESUME_URL = 'https://drive.google.com/file/d/17V115FMnDoENaAZnUvMeL7UV1yNm0llA/view?usp=sharing'
+const MIN_ZOOM = 1
+const MAX_ZOOM = 3.2
+
+const clampZoom = (value) => Math.min(Math.max(value, MIN_ZOOM), MAX_ZOOM)
+
+const getViewerFit = (naturalWidth, naturalHeight) => {
+  const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1280
+  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 900
+  const maxWidth = Math.max(280, Math.min(viewportWidth - 48, 980))
+  const maxHeight = Math.max(320, viewportHeight - 210)
+  const scale = Math.min(maxWidth / naturalWidth, maxHeight / naturalHeight, 1)
+
+  return {
+    width: Math.round(naturalWidth * scale),
+    height: Math.round(naturalHeight * scale),
+  }
+}
 
 export default function PortfolioPage() {
   const { scrollYProgress } = useScroll()
   const titleY = useTransform(scrollYProgress, [0, 0.4], [0, -70])
   const subtitleY = useTransform(scrollYProgress, [0, 0.4], [0, -40])
+  const [selectedDesign, setSelectedDesign] = useState(null)
+  const [designZoom, setDesignZoom] = useState(MIN_ZOOM)
+  const [designFit, setDesignFit] = useState(null)
+  const [isDraggingDesign, setIsDraggingDesign] = useState(false)
+  const designViewportRef = useRef(null)
+  const designDragRef = useRef({
+    active: false,
+    startX: 0,
+    startY: 0,
+    scrollLeft: 0,
+    scrollTop: 0,
+  })
+
+  useEffect(() => {
+    if (!selectedDesign) {
+      return undefined
+    }
+
+    const originalBodyOverflow = document.body.style.overflow
+    const originalHtmlOverflow = document.documentElement.style.overflow
+
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    window.dispatchEvent(new Event('lenis-stop'))
+
+    let isActive = true
+    let naturalSize = null
+
+    const syncDesignFit = () => {
+      if (!isActive || !naturalSize) {
+        return
+      }
+
+      setDesignFit(getViewerFit(naturalSize.width, naturalSize.height))
+    }
+
+    const image = new window.Image()
+    image.onload = () => {
+      if (!isActive) {
+        return
+      }
+
+      naturalSize = {
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+      }
+
+      syncDesignFit()
+    }
+    image.src = selectedDesign.image
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setSelectedDesign(null)
+        return
+      }
+
+      if (event.key === '+' || event.key === '=') {
+        setDesignZoom((currentZoom) => clampZoom(currentZoom + 0.2))
+      }
+
+      if (event.key === '-') {
+        setDesignZoom((currentZoom) => clampZoom(currentZoom - 0.2))
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('resize', syncDesignFit)
+
+    return () => {
+      isActive = false
+      document.body.style.overflow = originalBodyOverflow
+      document.documentElement.style.overflow = originalHtmlOverflow
+      window.dispatchEvent(new Event('lenis-start'))
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('resize', syncDesignFit)
+    }
+  }, [selectedDesign])
+
+  useEffect(() => {
+    const handlePointerMove = (event) => {
+      if (!designDragRef.current.active || !designViewportRef.current) {
+        return
+      }
+
+      const deltaX = event.clientX - designDragRef.current.startX
+      const deltaY = event.clientY - designDragRef.current.startY
+
+      designViewportRef.current.scrollLeft = designDragRef.current.scrollLeft - deltaX
+      designViewportRef.current.scrollTop = designDragRef.current.scrollTop - deltaY
+    }
+
+    const handlePointerUp = () => {
+      designDragRef.current.active = false
+      setIsDraggingDesign(false)
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointerup', handlePointerUp)
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerup', handlePointerUp)
+    }
+  }, [])
+
   const scrollToSection = (id) => {
     const section = document.getElementById(id)
 
@@ -24,6 +155,48 @@ export default function PortfolioPage() {
 
     section.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
+
+  const openDesignModal = (design) => {
+    setSelectedDesign(design)
+    setDesignZoom(MIN_ZOOM)
+    setDesignFit(null)
+  }
+
+  const closeDesignModal = () => {
+    setSelectedDesign(null)
+    setDesignZoom(MIN_ZOOM)
+    setDesignFit(null)
+    setIsDraggingDesign(false)
+  }
+
+  const updateDesignZoom = (step) => {
+    setDesignZoom((currentZoom) => clampZoom(currentZoom + step))
+  }
+
+  const handleDesignZoomWheel = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+    updateDesignZoom(event.deltaY < 0 ? 0.15 : -0.15)
+  }
+
+  const handleDesignDragStart = (event) => {
+    if (designZoom <= MIN_ZOOM || !designViewportRef.current) {
+      return
+    }
+
+    event.preventDefault()
+    designDragRef.current = {
+      active: true,
+      startX: event.clientX,
+      startY: event.clientY,
+      scrollLeft: designViewportRef.current.scrollLeft,
+      scrollTop: designViewportRef.current.scrollTop,
+    }
+    setIsDraggingDesign(true)
+  }
+
+  const viewerImageWidth = designFit ? Math.round(designFit.width * designZoom) : undefined
+  const viewerImageHeight = designFit ? Math.round(designFit.height * designZoom) : undefined
 
   return (
     <main className="relative overflow-hidden pb-20">
@@ -121,8 +294,6 @@ export default function PortfolioPage() {
                   }}
                   transition={{ duration: 7.5, repeat: Infinity, ease: 'easeInOut' }}
                 />
-
-
               </div>
             </motion.div>
           </div>
@@ -187,65 +358,107 @@ export default function PortfolioPage() {
             ))}
           </div>
         </SectionReveal>
+
         <div id="projects-section">
           <SectionReveal>
-          <p className="section-kicker">Projects</p>
-          <h2 className="section-title">Recent digital products and premium website builds</h2>
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
-            {portfolioProjects.map((project, index) => (
-              <motion.article
-                key={project.title}
-                className="glass-panel group flex h-full flex-col rounded-3xl p-6"
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={{ duration: 0.6, delay: index * 0.12 }}
-                whileHover={{ y: -8 }}
-              >
-                <div className="mb-5 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/40 p-3">
-                  <div className="flex aspect-[16/9] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_52%),linear-gradient(180deg,rgba(15,23,42,0.96),rgba(2,6,23,0.88))] p-2">
-                    <img
-                      src={project.image}
-                      alt={`${project.title} preview`}
-                      loading="lazy"
-                      className="h-full w-full rounded-lg object-contain object-center shadow-[0_18px_45px_rgba(15,23,42,0.35)]"
-                    />
+            <p className="section-kicker">Projects</p>
+            <h2 className="section-title">Recent digital products and premium website builds</h2>
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              {portfolioProjects.map((project, index) => (
+                <motion.article
+                  key={project.title}
+                  className="glass-panel group flex h-full flex-col rounded-3xl p-6"
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.35 }}
+                  transition={{ duration: 0.6, delay: index * 0.12 }}
+                  whileHover={{ y: -8 }}
+                >
+                  <div className="mb-5 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/40 p-3">
+                    <div className="flex aspect-[16/9] items-center justify-center rounded-xl bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_52%),linear-gradient(180deg,rgba(15,23,42,0.96),rgba(2,6,23,0.88))] p-2">
+                      <img
+                        src={project.image}
+                        alt={`${project.title} preview`}
+                        loading="lazy"
+                        className="h-full w-full rounded-lg object-contain object-center shadow-[0_18px_45px_rgba(15,23,42,0.35)]"
+                      />
+                    </div>
                   </div>
-                </div>
-                <h3 className="font-display text-xl font-semibold text-white">{project.title}</h3>
-                <p className="mt-3 text-sm text-slate-300">{project.description}</p>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <span key={tag} className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs text-slate-200">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-auto flex flex-wrap gap-3 pt-6">
-                  <a
-                    href={project.previewUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-brand-blue/40 bg-brand-blue/10 px-4 py-2 text-sm font-medium text-brand-blue transition hover:border-brand-blue hover:bg-brand-blue/20 hover:text-white"
-                  >
-                    Vercel
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-slate-100 transition hover:border-white/40 hover:bg-white/10 hover:text-white"
-                  >
-                    <img src="/contact-logos/github.svg" alt="GitHub logo" className="h-4 w-4 object-contain" />
-                    GitHub
-                  </a>
-                </div>
-              </motion.article>
-            ))}
-          </div>
+                  <h3 className="font-display text-xl font-semibold text-white">{project.title}</h3>
+                  <p className="mt-3 text-sm text-slate-300">{project.description}</p>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <span key={tag} className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs text-slate-200">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-auto flex flex-wrap gap-3 pt-6">
+                    <a
+                      href={project.previewUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-brand-blue/40 bg-brand-blue/10 px-4 py-2 text-sm font-medium text-brand-blue transition hover:border-brand-blue hover:bg-brand-blue/20 hover:text-white"
+                    >
+                      Vercel
+                      <ArrowUpRight className="h-4 w-4" />
+                    </a>
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-slate-100 transition hover:border-white/40 hover:bg-white/10 hover:text-white"
+                    >
+                      <img src="/contact-logos/github.svg" alt="GitHub logo" className="h-4 w-4 object-contain" />
+                      GitHub
+                    </a>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
           </SectionReveal>
         </div>
+
+        <SectionReveal>
+          <p className="section-kicker">Designs</p>
+          <h2 className="section-title">My Creative Designs</h2>
+          <p className="section-copy">A curated collection of visual ideas shaped into bold, scroll-stopping design stories.</p>
+
+          {portfolioDesigns.length > 0 ? (
+            <div className="mt-10 grid gap-x-6 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
+              {portfolioDesigns.map((design, index) => (
+                <motion.button
+                  key={`${design.title}-${index}`}
+                  type="button"
+                  className="group flex h-full flex-col text-left"
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.25 }}
+                  transition={{ duration: 0.55, delay: index * 0.08 }}
+                  whileHover={{ y: -6 }}
+                  onClick={() => openDesignModal(design)}
+                >
+                  <div className="flex min-h-[220px] items-start justify-center sm:min-h-[260px]">
+                    <img
+                      src={design.image}
+                      alt={design.title}
+                      loading="lazy"
+                      className="h-auto max-h-[240px] w-auto max-w-full object-contain object-top drop-shadow-[0_24px_50px_rgba(3,7,18,0.42)] transition duration-300 group-hover:scale-[1.02] sm:max-h-[280px]"
+                    />
+                  </div>
+                  <div className="mt-4 px-1">
+                    <h3 className="font-display text-lg font-semibold text-white">{design.title}</h3>
+                    <p className="mt-2 text-xs uppercase tracking-[0.18em] text-brand-blue">{design.platform}</p>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          ) : (
+            <div className="glass-panel mt-8 rounded-3xl p-6 text-sm text-slate-300">
+              Add your design images to <span className="font-semibold text-white">frontend/src/assets/canva</span> and they will appear here automatically.
+            </div>
+          )}
+        </SectionReveal>
 
         <SectionReveal>
           <p className="section-kicker">Certifications</p>
@@ -276,8 +489,6 @@ export default function PortfolioPage() {
                 <p className="mt-4 text-xs uppercase tracking-[0.14em] text-brand-blue">{certificate.organization}</p>
                 <h3 className="mt-2 font-display text-lg font-semibold text-white">{certificate.title}</h3>
                 <p className="mt-3 text-sm text-slate-300">{certificate.description}</p>
-
-
               </motion.article>
             ))}
           </div>
@@ -318,40 +529,126 @@ export default function PortfolioPage() {
 
         <div id="contact-section">
           <SectionReveal className="glass-panel rounded-3xl p-6 sm:p-10">
-          <p className="section-kicker">Contact</p>
-          <h2 className="section-title">Let&apos;s talk about your next product</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-4">
-            <a className="contact-pill" href="mailto:jaydeep@example.com">
-              <img src="/contact-logos/gmail.svg" alt="Gmail logo" className="h-4 w-4 object-contain" />
-              Email
-            </a>
-            <a className="contact-pill" href="https://wa.me/7987576476" target="_blank" rel="noreferrer">
-              <img src="/contact-logos/whatsapp.svg" alt="WhatsApp logo" className="h-4 w-4 object-contain" />
-              WhatsApp
-            </a>
-            <a className="contact-pill" href="https://github.com" target="_blank" rel="noreferrer">
-              <img src="/contact-logos/github.svg" alt="GitHub logo" className="h-4 w-4 object-contain" />
-              GitHub
-            </a>
-            <a className="contact-pill" href="https://linkedin.com" target="_blank" rel="noreferrer">
-              <img src="/contact-logos/linkedin.svg" alt="LinkedIn logo" className="h-4 w-4 object-contain" />
-              LinkedIn
-            </a>
-          </div>
+            <p className="section-kicker">Contact</p>
+            <h2 className="section-title">Let&apos;s talk about your next product</h2>
+            <div className="mt-6 grid gap-4 md:grid-cols-4">
+              <a className="contact-pill" href="mailto:jaydeep@example.com">
+                <img src="/contact-logos/gmail.svg" alt="Gmail logo" className="h-4 w-4 object-contain" />
+                Email
+              </a>
+              <a className="contact-pill" href="https://wa.me/7987576476" target="_blank" rel="noreferrer">
+                <img src="/contact-logos/whatsapp.svg" alt="WhatsApp logo" className="h-4 w-4 object-contain" />
+                WhatsApp
+              </a>
+              <a className="contact-pill" href="https://github.com" target="_blank" rel="noreferrer">
+                <img src="/contact-logos/github.svg" alt="GitHub logo" className="h-4 w-4 object-contain" />
+                GitHub
+              </a>
+              <a className="contact-pill" href="https://linkedin.com" target="_blank" rel="noreferrer">
+                <img src="/contact-logos/linkedin.svg" alt="LinkedIn logo" className="h-4 w-4 object-contain" />
+                LinkedIn
+              </a>
+            </div>
           </SectionReveal>
         </div>
       </section>
+
+      <AnimatePresence>
+        {selectedDesign ? (
+          <motion.div
+            className="fixed inset-0 z-[140] bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(124,58,237,0.22),transparent_35%),rgba(2,6,23,0.94)] p-3 backdrop-blur-xl sm:p-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeDesignModal}
+            onWheelCapture={handleDesignZoomWheel}
+          >
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label={`${selectedDesign.title} design preview`}
+              className="relative mx-auto flex h-full w-full max-w-7xl flex-col"
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.98 }}
+              transition={{ duration: 0.25 }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="mb-3 flex flex-col gap-3 rounded-[1.75rem] border border-white/12 bg-slate-950/55 px-4 py-4 shadow-[0_25px_70px_rgba(2,6,23,0.45)] backdrop-blur-2xl sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] text-brand-blue">{selectedDesign.platform}</p>
+                  <h3 className="mt-2 font-display text-xl font-semibold text-white sm:text-2xl">{selectedDesign.title}</h3>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/8 text-white transition hover:border-white/30 hover:bg-white/14"
+                    onClick={() => updateDesignZoom(-0.2)}
+                    aria-label="Zoom out"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-full border border-white/15 bg-white/8 px-4 py-2 text-sm font-medium text-slate-100 transition hover:border-white/30 hover:bg-white/14"
+                    onClick={() => setDesignZoom(MIN_ZOOM)}
+                  >
+                    {Math.round(designZoom * 100)}%
+                  </button>
+                  <button
+                    type="button"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/8 text-white transition hover:border-white/30 hover:bg-white/14"
+                    onClick={() => updateDesignZoom(0.2)}
+                    aria-label="Zoom in"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/8 text-white transition hover:border-white/30 hover:bg-white/14"
+                    onClick={closeDesignModal}
+                    aria-label="Close image viewer"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="relative flex-1 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.9),rgba(2,6,23,0.98))] shadow-[0_35px_90px_rgba(2,6,23,0.58)]">
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.08),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(56,189,248,0.1),transparent_30%)]" />
+                <div
+                  ref={designViewportRef}
+                  data-lenis-prevent
+                  className={`relative h-full overflow-auto overscroll-contain px-4 py-5 sm:px-8 sm:py-7 ${designZoom > MIN_ZOOM ? (isDraggingDesign ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-default'}`}
+                  onMouseDown={handleDesignDragStart}
+                >
+                  <div className="flex min-h-full min-w-full items-center justify-center">
+                    {designFit ? (
+                      <img
+                        src={selectedDesign.image}
+                        alt={selectedDesign.title}
+                        draggable="false"
+                        className="block h-auto max-w-none select-none object-contain shadow-[0_30px_80px_rgba(2,6,23,0.55)]"
+                        style={{
+                          width: `${viewerImageWidth}px`,
+                          height: `${viewerImageHeight}px`,
+                        }}
+                      />
+                    ) : (
+                      <div className="h-[320px] w-[220px] animate-pulse rounded-[1.5rem] bg-white/10" />
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-3 px-1 text-xs text-slate-400">
+                Scroll to zoom, drag to move when zoomed in, and press Esc to close.
+              </p>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </main>
   )
 }
-
-
-
-
-
-
-
-
-
-
-

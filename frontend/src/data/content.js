@@ -15,6 +15,21 @@ import gymDemoPreview from '../assets/images/demo-gym.png'
 import sweetshoppreview from '../assets/images/sweetshop.com.png'
 import rawclawPreview from '../assets/images/rawclaw.png'
 
+const canvaDesignModules = import.meta.glob('../assets/canva/*.{png,jpg,jpeg,webp,avif,gif}', {
+  eager: true,
+  import: 'default',
+})
+
+const formatDesignName = (filePath) =>
+  filePath
+    .split('/')
+    .pop()
+    .replace(/\.[^.]+$/, '')
+    .replace(/[-_]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+
 export const portfolioSkills = [
   {
     title: 'MERN Stack',
@@ -125,6 +140,14 @@ export const portfolioProjects = [
     githubUrl: 'https://github.com/Codeboy20/RevynAI',
   },
 ]
+
+export const portfolioDesigns = Object.entries(canvaDesignModules)
+  .sort(([firstPath], [secondPath]) => firstPath.localeCompare(secondPath))
+  .map(([filePath, image]) => ({
+    title: formatDesignName(filePath),
+    platform: 'Canva',
+    image,
+  }))
 
 export const portfolioTimeline = [
   {
