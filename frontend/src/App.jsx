@@ -7,6 +7,7 @@ import { useLenis } from './hooks/useLenis'
 
 const LandingChoice = lazy(() => import('./pages/LandingChoice'))
 const PortfolioPage = lazy(() => import('./pages/PortfolioPage'))
+const DesignsPage = lazy(() => import('./pages/DesignsPage'))
 const ServicesPage = lazy(() => import('./pages/ServicesPage'))
 
 const BOOT_LOADER_MS = 1700
@@ -14,6 +15,7 @@ const ROUTE_LOADER_MS = 900
 const ROUTE_QUOTES = {
   '/': 'Choosing the cleanest render path.',
   '/portfolio': 'Shipping pixels with purpose.',
+  '/designs': 'Curating visuals for focused browsing.',
   '/services': 'Building systems that convert.',
 }
 
@@ -40,6 +42,7 @@ function AnimatedRoutes({ location }) {
           <Routes location={location}>
             <Route path="/" element={<LandingChoice />} />
             <Route path="/portfolio" element={<PortfolioPage />} />
+            <Route path="/designs" element={<DesignsPage />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="*" element={<LandingChoice />} />
           </Routes>
